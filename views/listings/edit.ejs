@@ -1,0 +1,39 @@
+<%- layout("layouts/boilerplate") %>
+    <h3> Edit Listing</h3>
+    <form action="/listings/<%= listingData._id %>?_method=PUT" method="post">
+    <div class="row">
+    <div class="col-8 offset-2">
+    <div class="mb-3">
+    <label for="title" class="form-label">Title: </label>
+        <input type="text" name="listing[title]" id="title" class="form-control" value="<%= listingData.title %>">
+    </div>
+    
+    <div class="mb-3">
+    <label for="description" class="form-label">Description: </label>
+        <textarea type="text" name="listing[description]" id="description" class="form-control"><%= listingData.description %></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="img" class="form-label">Image:  </label>
+        <input type="url" name="listing[image][url]" id="img" class="form-control" value="<%= listingData.image.url %>">
+    </div>
+
+    <div class="mb-3">
+        <label for="price" class="form-label">Price:  </label>
+        <input type="number" name="listing[price]" id="price" class="form-control" value="<%= listingData.price %>">
+    </div>
+    <div class="row">
+    <div class="mb-3" class="col-md-4">
+        <label for="country" class="form-label">Country: </label>
+        <input type="text" name="listing[country]" id="country" class="form-control" value="<%= listingData.country %>">
+    </div>
+
+    <div class="mb-3" class="col-md-8">
+        <label class="form-label">Location: </label>
+        <input type="text" name="listing[location]" id="location" class="form-control" value="<%= listingData.location %>">
+    </div>
+    </div>
+        <button class="btn btn-dark">Submit</button>
+    </form>
+</div>
+</div>
