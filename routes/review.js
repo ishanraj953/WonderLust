@@ -5,6 +5,7 @@ const wrapasync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
 const {listingSchema, reviewSchema} = require("../schema.js");
 const listing = require("../model/listing.js");
+const {isLoggedIn,isAuthor} = require("../middleware.js")
 
 
 
@@ -20,10 +21,10 @@ function validateReview(req,res,next){
 
 
 //Reviews
-router.post("/",validateReview,wrapasync( async (req,res) => {
+router.post("/",isAuthor,isLoggedIn,validateReview,wrapasync( async (req,res) => {
     let listening = await listing.findById(req.params.id);
     let newReview = new Reviews(req.body.review);
-    
+    newReview.author = req.user._id;
     listening.reviews.push(newReview);
 
     await listening.save();
