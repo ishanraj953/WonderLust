@@ -33,6 +33,7 @@
       </div>
 
       <!-- Reviews Section -->
+       <% if(currUser){ %>
       <div class="card shadow-sm mb-4">
         <div class="card-body">
           <h4 class="mb-3">Leave a Review</h4>
@@ -49,8 +50,10 @@
             <button class="btn btn-dark">Submit</button>
           </form>
         </div>
-      </div>
+      </div>       
+      <% } %>
 
+      <!-- leave a review -->
       <div class="mb-4">
         <h4 class="mb-3">All Reviews</h4>
         <div class="row g-3">
@@ -59,16 +62,16 @@
               <div class="col-md-6">
                 <div class="card h-100">
                   <div class="card-body">
-                    <p class="card-text fw-bold mb-1"><%= review.author ? review.author.username : "Anonymous" %></p>
-                    <p class="card-text mb-1"><%= review.comment %></p>
                     <p class="card-text text-warning mb-2">
                       <% for(let i=0; i<review.rating; i++) { %>
-                        <i class="bi bi-star-fill"></i>
+                        <i class="fa-solid fa-star"></i>
                       <% } %>
                       <% for(let i=review.rating; i<5; i++) { %>
-                        <i class="bi bi-star"></i>
+                        <i class="fa-light fa-star"></i>
                       <% } %>
                     </p>
+                    <p class="card-text fw-bold mb-1"><%= review.author ? review.author.username : "Anonymous" %></p>
+                    <p class="card-text mb-1"><%= review.comment %></p>
                   </div>
                   <form action="/listings/<%= data._id %>/reviews/<%= review._id %>?_method=DELETE" method="post" class="card-footer bg-transparent border-0 p-2">
                     <button class="btn btn-sm btn-outline-danger">Delete</button>
