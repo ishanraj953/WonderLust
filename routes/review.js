@@ -8,7 +8,8 @@ const Listing = require("../model/listing.js");
 const { isLoggedIn, isAuthor } = require("../middleware.js");
 
 function validateReview(req, res, next) {
-    let { error } = reviewSchema.validate(req.body);
+    // validate the actual review object sent from the form
+    let { error } = reviewSchema.validate(req.body.review);
     if (error) {
         let errmsg = error.details.map((el) => el.message).join(",");
         throw new ExpressError(400, errmsg);
