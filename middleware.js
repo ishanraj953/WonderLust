@@ -1,5 +1,7 @@
 const Listing = require("./model/listing");
 const Review = require("./model/review");
+const { reviewSchema } = require("./schema");
+const ExpressError = require("./utils/ExpressError.js");
 
 module.exports.isLoggedIn = (req,res,next) => {
     if(!req.isAuthenticated()){
@@ -15,10 +17,7 @@ module.exports.saveRedirectUrl = (req,res,next) => {
         res.locals.redirectUrl = req.session.redirectUrl;
     }
     next();
-}
-
-
-
+};
 
 module.exports.isOwner = async(req,res,next) => {
     const { id } = req.params;
@@ -28,7 +27,7 @@ module.exports.isOwner = async(req,res,next) => {
         return res.redirect(`/listings/${id}`);
     }
     next();
-}
+};
 
 module.exports.isAuthor = async (req, res, next) => {
   const { reviewID, id } = req.params;
@@ -40,4 +39,15 @@ module.exports.isAuthor = async (req, res, next) => {
   }
 
   next();
+};
+
+module.exports.validateReview = (req, res, next) => {
+    // validate the actual review object sent from the form
+    let { error } = reviewSchema.validate(req.body);
+    if (error) {
+        let errmsg = error.details.map((el) => el.message).join(",");
+        throw new ExpressError(400, errmsg);
+    } else {
+        next();
+    }
 };

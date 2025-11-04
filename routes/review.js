@@ -5,18 +5,8 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
 const { reviewSchema } = require("../schema.js");
 const Listing = require("../model/listing.js");
-const { isLoggedIn, isAuthor } = require("../middleware.js");
+const { isLoggedIn, isAuthor, validateReview} = require("../middleware.js");
 
-function validateReview(req, res, next) {
-    // validate the actual review object sent from the form
-    let { error } = reviewSchema.validate(req.body.review);
-    if (error) {
-        let errmsg = error.details.map((el) => el.message).join(",");
-        throw new ExpressError(400, errmsg);
-    } else {
-        next();
-    }
-}
 
 // Reviews - add
 router.post(
@@ -24,6 +14,7 @@ router.post(
     isLoggedIn,
     validateReview,
     wrapAsync(async (req, res) => {
+    console.log(req.body);
         const { id } = req.params;
         const listing = await Listing.findById(id);
         if (!listing) {
