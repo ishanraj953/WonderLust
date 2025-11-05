@@ -5,13 +5,15 @@ const passport = require("passport");
 const {saveRedirectUrl} = require("../middleware");
 const { signUp, idxSignUp, login, postLogin, logOut } = require("../controllers/user");
 
-router.get("/signup", idxSignUp);
+router
+    .route("/signup")
+    .get(idxSignUp)
+    .post(signUp);
 
-router.post("/signup", signUp);
-
-router.get("/login", login);
-
-router.post("/login",
+router
+    .route("/login")
+    .get(login)
+    .post(
     saveRedirectUrl, 
     passport.authenticate(
     "local",
