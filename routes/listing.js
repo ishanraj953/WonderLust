@@ -6,6 +6,9 @@ const ExpressError = require("../utils/ExpressError.js");
 const Listing = require("../model/listing.js");
 const {isLoggedIn, isOwner} = require("../middleware.js");
 const listingController = require("../controllers/listing.js");
+const multer  = require('multer');
+const {storage} = require("../cloudConfig.js");
+const upload = multer({ storage });
 
 const validateListing = (req, res, next) => {
     let {error} = listingSchema.validate(req.body);
@@ -23,7 +26,10 @@ router
     //index route
     .get(wrapAsync(listingController.index))
     //create route
-    .post(isLoggedIn ,validateListing, wrapAsync(listingController.create));
+    .post(isLoggedIn,
+    upload.single('listing[image]'), 
+    validateListing, 
+    wrapAsync(listingController.create));
 
 //new route
 router.get("/new",isLoggedIn, listingController.new);
