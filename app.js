@@ -1,3 +1,6 @@
+if(process.env.NODE_ENV != "production"){
+    require('dotenv').config();
+}
 const express = require("express");
 const ejs = require("ejs");
 const path = require("path");
@@ -10,7 +13,6 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./model/user.js"); 
-const multer = require("multer");
 const listingRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
@@ -58,9 +60,6 @@ main()
 async function main() {
   await mongoose.connect('mongodb://127.0.0.1:27017/wonderlust');
 }
-
-
-
 
 app.get("/", (req,res) => {
     res.send("Port is running");
