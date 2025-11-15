@@ -1,5 +1,5 @@
 <%- layout("layouts/boilerplate") %>
-    <form action="/listings/<%= listingData._id %>?_method=PUT" method="post">
+    <form action="/listings/<%= listingData._id %>?_method=PUT" method="post" enctype="multipart/form-data">
     <div class="row">
     <div class="col-8 offset-2">
     <div class="mb-3">
@@ -14,8 +14,12 @@
     </div>
 
     <div class="mb-3">
-        <label for="img" class="form-label">Image:  </label>
-        <input type="url" name="listing[image][url]" id="img" class="form-control" value="<%= listingData.image.url %>">
+        <img height="100px" width="100px" src="<%= originalImg %>">
+    </div>
+
+    <div class="mb-3">
+        <label for="img" class="form-label">Upload new Image:  </label>
+        <input type="file" name="listing[image]" id="img" class="form-control">
     </div>
 
     <div class="mb-3">

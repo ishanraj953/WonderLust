@@ -51,13 +51,23 @@ module.exports.edit = async(req,res) => {
         req.flash("error","listing not found!!");
         return res.redirect("/listings");
     }
-    res.render("listings/edit",{listingData});
+    let originalImg = listingData.image.url;
+    originalImg.replace("/upload","/upload/w_250");
+    res.render("listings/edit",{listingData, originalImg});
 };
 
 module.exports.update = async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing }, { runValidators: true, new: true });
+    await Listing.findByIdAndUpdate(id, { ...req.body.listing }, 
+        { runValidators: true, new: true });
+    if(typeof req.file != "undefined"){
+    let url = req.file.path;
+    let filename = req.file.filename;
+    console.log(url + "---" + filename);
+    listing.image = {url, filename};
+    await listing.save();
+    }
     req.flash("success", "listing updated successfully!!");
     res.redirect(`/listings/${id}`);
 };
