@@ -38,8 +38,12 @@ router
     .route("/:id")
     //show route
     .get(listingController.show)
-    //Update Route
-    .put(isLoggedIn, isOwner,validateListing, wrapAsync(listingController.update))
+    //Update Route 
+    .put(isLoggedIn, 
+        isOwner,
+        upload.single('listing[image]'),
+        validateListing, 
+        wrapAsync(listingController.update))
     //Delete Route
     .delete(isLoggedIn, isOwner,wrapAsync(listingController.delete));
 
