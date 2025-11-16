@@ -1,4 +1,92 @@
 <%- layout("layouts/boilerplate") %>
+
+<style>
+     #filters{
+        margin-left: 2rem;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .filter{
+        text-align: center;
+        margin-right: 1rem;
+        opacity: 0.7;
+    }
+    .filter p{
+        font-size: 0.9rem;
+    }
+    .filter:hover{
+        opacity: 1;
+        cursor: pointer;
+    }
+    .taxes{
+        display: none;
+    }
+    .tax-toggle{
+        height: 3rem;
+        padding: 1rem;
+        border: 1px solid black;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+<div id="filters" >
+    <div class="filter mt-3"> 
+        <i class="fa-solid fa-fire"></i>
+        <p> Trending </p>
+    </div>
+
+    <div class="filter mt-3"> 
+        <i class="fa-solid fa-bed"></i>
+        <p> Beds </p>
+    </div>
+
+    <div class="filter mt-3"> 
+        <i class="fa-solid fa-city"></i>
+        <p> Iconic Cities </p>
+    </div>
+
+    <div class="filter mt-3"> 
+        <i class="fa-solid fa-mountain-city"></i>
+        <p> Mountain City </p>
+    </div>
+
+    <div class="filter mt-3"> 
+        <i class="fa-solid fa-person-swimming"></i>
+        <p> Amazing Pools </p>
+    </div>
+
+    <div class="filter mt-3"> 
+        <i class="fa-solid fa-landmark"></i>
+        <p> Ancient Landmarks </p>
+    </div>
+
+    <div class="filter mt-3"> 
+        <i class="fa-solid fa-snowman"></i>
+        <p> Hill Station </p>
+    </div>
+
+    <div class="filter mt-3"> 
+        <i class="fa-solid fa-cow"></i>
+        <p> Farms </p>
+    </div>
+
+    <div class="filter mt-3"> 
+       <i class="fa-solid fa-sailboat"></i>
+        <p> Boating </p>
+    </div>
+
+    <div class="tax-toggle">
+        <div class="form-check-reverse form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+            <label class="form-check-label" for="switchCheckDefault">Default switch checkbox input</label>
+            </div>
+    </div>
+</div>
+
 <div class="row row-cols-lg-3 row-cols-md-2 ow-cols-sm-1">
     <% for(let data of allListing) { %>
         <a href="/listings/<%= data._id %>" class="card-a">
@@ -11,9 +99,26 @@
         <p class="card-text">
            <b> <%= data.title %> </b> <br>
           &#8377; <%= data.price ? data.price.toLocaleString("en-IN") : "N/A" %> / night
+          <i class="taxes">&nbsp; +18% gst</i>
         </p>
     </div>
     </div>
     </a>
     <% } %>
 </div>
+
+
+<script>
+    const taxSwitch = document.getElementById("switchCheckDefault");
+    taxSwitch.addEventListener("click", ()=>{
+        console.log("Clicked");
+        const tax = document.getElementsByClassName("taxes");
+        for(info of tax){
+            if(info.style.display != "inline"){
+                info.style.display = "inline";
+            }else{
+                info.style.display = "none";
+            }
+        }
+    });
+</script>

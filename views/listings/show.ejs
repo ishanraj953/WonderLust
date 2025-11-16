@@ -65,11 +65,11 @@
       </div>       
       <% } %>
 
-      <!-- leave a review -->
+      <!-- show a review -->
       <div class="mb-4">
+        <% if(data.reviews && data.reviews.length > 0) { %>
         <h4 class="mb-3">All Reviews</h4>
         <div class="row g-3">
-          <% if(data.reviews && data.reviews.length > 0) { %>
             <% for(let review of data.reviews) { %>
               <div class="col-md-6">
                 <div class="card h-100">
@@ -91,13 +91,32 @@
                 </div>
               </div>
             <% } %>
-          <% } else { %>
-            <div class="col-12">
-              <div class="alert alert-secondary text-center">No reviews yet.</div>
-            </div>
           <% } %>
         </div>
+      </div>
+      <div class="col-7 mb-4">
+        <h3>Where you'll be</h3>
+        <div id="map"></div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+    let MY_TOKEN = "<%= process.env.MAP_TOKEN %>"
+    mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/standard', // Use the standard style for the map
+        projection: 'globe', // display the map as a globe
+        zoom: 1, // initial zoom level, 0 is the world view, higher values zoom in
+        center: [30, 15] // center the map on this longitude and latitude
+    });
+
+    map.addControl(new mapboxgl.NavigationControl());
+    map.scrollZoom.disable();
+
+    map.on('style.load', () => {
+        map.setFog({}); // Set the default atmosphere style
+    });
+</script>

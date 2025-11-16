@@ -61,10 +61,6 @@ async function main() {
   await mongoose.connect('mongodb://127.0.0.1:27017/wonderlust');
 }
 
-app.get("/", (req,res) => {
-    res.send("Port is running");
-});
-
 app.use((req,res,next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
