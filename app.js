@@ -25,7 +25,7 @@ const userRouter = require("./routes/user.js");
 const { error } = require('console');
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT;
 
 app.engine('ejs', ejsmate);
 app.set("view engine","ejs");
