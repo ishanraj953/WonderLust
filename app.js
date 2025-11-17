@@ -1,6 +1,11 @@
 if(process.env.NODE_ENV != "production"){
     require('dotenv').config();
 }
+// REMOVE any unconditional TLS bypass in production; only use for local dev debugging if absolutely necessary
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // <-- remove or comment out
+
+const dbUrl = process.env.ATLASDB_URL;
+
 const express = require("express");
 const ejs = require("ejs");
 const path = require("path");
@@ -9,6 +14,7 @@ const methodOverride = require("method-override");
 const ejsmate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -16,6 +22,7 @@ const User = require("./model/user.js");
 const listingRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const { error } = require('console');
 
 const app = express();
 const port = 8080;
@@ -27,8 +34,22 @@ app.use(express.static(path.join(__dirname,"public")));
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 
+
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret: process.env.SECRET,
+    },
+    touchAfter: 24 * 3600
+});
+
+store.on("error", () => {
+    console.log("ERROR in Mongo Store", err);
+})
+
 const sessionSave = {
-     secret: 'secret',
+    store,
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -58,7 +79,18 @@ main()
 
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/wonderlust');
+  try {
+    await mongoose.connect(dbUrl, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 10000, // fail fast if cannot connect
+    });
+    console.log("Connected to DB");
+  } catch (err) {
+    console.error("MongoDB connection error:", err);
+    // exit so process manager (nodemon) restarts, or surface the error for CI
+    process.exit(1);
+  }
 }
 
 app.use((req,res,next) => {
