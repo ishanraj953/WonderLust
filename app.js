@@ -27,6 +27,10 @@ const { error } = require('console');
 const app = express();
 const port = process.env.PORT;
 
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
+
 app.engine('ejs', ejsmate);
 app.set("view engine","ejs");
 app.set("views", path.join(__dirname,"views"));
@@ -98,10 +102,6 @@ app.use((req,res,next) => {
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user;
     next();
-});
-
-app.get("/", (req, res) => {
-    res.redirect("/listings");
 });
 
 app.use("/listings",listingRouter);
